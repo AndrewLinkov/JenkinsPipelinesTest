@@ -1,0 +1,72 @@
+pipeline {
+   agent any
+
+   // Инструменты, которые будут автоматически добавлены в PATH
+   tools {
+       maven 'Maven 3'   // имя Maven‑инсталляции, заданное в Jenkins
+       jdk   'JDK 11'    // имя JDK, заданное в Jenkins
+   }
+
+   // Переменные окружения
+   environment {
+       // Если переменная BRANCH_NAME не передана, используем ветку main
+       BRANCH_NAME = "${env.BRANCH_NAME ?: 'main'}"
+   }
+
+   stages {
+       stage('Checkout') {
+           steps {
+               // Для локального тестирования можно указать путь к репозиторию:
+               // git url: 'file:///path/to/your/repo', branch: "${BRANCH_NAME}"
+               checkout scm
+           }
+       }
+
+       stage('Build') {
+           steps {
+               echo 'Сборка проекта'
+               sh "${MAVEN_HOME}/bin/mvn clean compile"
+           }
+       }
+
+       stage('Run all tests') {
+           steps {
+               echo 'Запуск автотестов'
+               sh "${MAVEN_HOME}/bin/mvn test"
+           }
+       }
+
+       stage('Publish test reports') {
+           steps {
+               echo 'Публикуем отчёты по тестам...'
+               // JUnit‑отчёты генерируются плагином Surefire
+               junit '**/target/surefire-reports/*.xml'
+           }
+       }
+
+       stage('Archive artifacts (optional)') {
+           steps {
+               echo 'Архивируем результаты...'
+               archiveArtifacts(
+                   artifacts: 'target/*.jar',
+                   allowEmptyArchive: true,
+                   onlyIfSuccessful: true
+               )
+           }
+       }
+   }
+
+   // Действия после завершения всех стадий
+   post {
+       always {
+           echo "Сборка завершена. Статус: ${currentBuild.currentResult}"
+           cleanWs()   // очистка workspace
+       }
+       success {
+           echo '✅ Все тесты прошли успешно.'
+       }
+       failure {
+           echo '❌ Тесты упали или сборка не удалась.'
+       }
+   }
+}
