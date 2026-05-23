@@ -35,7 +35,8 @@
    else (mvn clean test -Dgroups="%CATEGORY%" -Dallure.results.directory=%WORKSPACE%\allure-results)
 
 ### Задача c Pipelines
-Создать залачу **"JenkinsTestPipeline"**
+Предварительно в Jenkins в разделе Tools настроить парметры JDK, Maven, Allure
+Создать задачу **"JenkinsTestPipeline"**
 1. В корне репозитория создать файл jenkinsfile
 2. Добавить параметры
 
