@@ -3,8 +3,8 @@ pipeline {
 
    // Инструменты, которые будут автоматически добавлены в PATH
    tools {
-       maven 'Maven 3.9.12'   // имя Maven‑инсталляции, заданное в Jenkins
-       jdk   'Java SE Development Kit 9.0.4'    // имя JDK, заданное в Jenkins
+       maven '3.9.12'   // имя Maven‑инсталляции, заданное в Jenkins
+       jdk   '9.0.4'    // имя JDK, заданное в Jenkins
    }
 
    // Переменные окружения
