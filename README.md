@@ -43,4 +43,9 @@
 2. Добавить параметры:
 
 
-### Запуск Docker
+### Запуск автотестов в Docker из Idea
+1. Создать Dockerfile в корне репозитория
+2. Создать образ через консоль командой 'docker build -t nameProject .'
+   Пример: docker build -t mathematicalsTest .
+3. Запустить тесты командой : docker run --rm mathematicalstest
+4. Остановить VmmemWSL в которой работает Docker Desctop:  wsl --shutdown
